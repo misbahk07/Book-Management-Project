@@ -78,7 +78,7 @@ const reviewUpdate =async function (req,res){
 
 const reviewDeleteById = async function (req, res) {
     try {
-       
+      
         let {bookId,reviewId} = req.params
 
         if(!isIdValid(bookId))  return res.status(400).send({ status: false, message: "please enter valid bookId"});
@@ -94,7 +94,7 @@ const reviewDeleteById = async function (req, res) {
         let bookExist = await bookModel.findByIdAndUpdate({ _id: bookId }, { $inc: { reviews: -1} })
 
         return res.status(200).send({ status: true, message: "Review deleted succesfully" })
-
+       
     } catch( error) {
         return res.status(500).send({ status: false, message: error.message})
     

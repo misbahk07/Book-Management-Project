@@ -7,7 +7,7 @@ const createUser =async function (req,res){
     try{
 
         let data=req.body
-        let {title,name,phone,email,password,address} =data
+        let {title,name,phone,email,password} =data
         if(Object.keys(data).length==0)  return res.status(400).send({status:false,message:"Request body doesn't be empty"})
         
         if(!title)  return res.status(400).send({status:false,message:"title is required"})
@@ -47,10 +47,12 @@ const login =async function (req,res){
     let data= req.body
     let {email,password}=data
     if(Object.keys(data).length==0)  return res.status(400).send({status:false,message:"Request body doesn't be empty"})
+
     if(!email)  return res.status(400).send({status:false,message:"email is required"})
     if(!password)  return res.status(400).send({status:false,message:"password is required"})
     let userdata= await userModel.findOne({email:email,password:password})
     if(!userdata) return res.status(404).send({status:false,message:"Email and password doesn't match with users Database"})
+
     let encoded = jwt.sign({userId:userdata._id},"secretKey",{expiresIn: '10h'})
     return res.status(200).send({status:true, message:'Success',data:{token:encoded}})
 

@@ -59,8 +59,27 @@ const getBooks =async function (req,res){
 
         }else{
 
+            // let filter={isDeleted:false}
+
+            // let query=req.query
+            // let {userId,category,subcategory}=query
+
+            // if(isValidString(userId) && isIdValid(userId))
+            // filter.userId=userId
+
+            // if(isValidString(category))
+            // filter.category=category.trim()
+
+            // if(isValidString(subcategory))
+            // filter.subcategory=subcategory.trim()
+            
+            // let books=await bookModel.find(filter).sort({title:1}).select({title:1,excerpt:1,userId:1,category:1,releasedAt:1,reviews:1})
+            // if(books.length==0) return res.status(404).send({status:false,message:"Book is already deleted or does not exists."})
+            // return res.status(200).send({status:true,message:"Success",data:books})
+
             let data2= await bookModel.find({$and:[req.query,{isDeleted:false}]}).select({title:1,excerpt:1,userId:1,category:1,releasedAt:1,reviews:1}).sort({title:1})
             if(data2.length==0) return res.status(404).send({status:false,message:"book is already deleted or doesn't exist"})
+
             return res.status(200).send({status:true, message:'Success',data:data2})
 
         }
@@ -80,9 +99,12 @@ const getBookReviewData = async function (req,res){
         if(!data2) return res.status(404).send({status:false,message:"book is already deleted or doesn't exist"})
 
         let data1= await reviewModel.find({bookId:data , isDeleted:false}).select({isDeleted:0,__v:0,createdAt:0,updatedAt:0})
-        let obj={...data2._doc,reviewsData:data1}
+        // let obj={...data2._doc,reviewsData:data1}
 
-        return res.status(200).send({status:true, message:'Success',data:obj})
+        let result=data2.toObject()
+        result.reviewsData=data1
+
+        return res.status(200).send({status:true, message:'Success',data:result})
 
     }catch(error){
         return res.status(500).send({status:false,message:error.message})

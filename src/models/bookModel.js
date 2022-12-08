@@ -12,6 +12,7 @@ const bookModel=new mongoose.Schema({
         deletedAt: {type:Date,default:null}, 
         isDeleted: {type:Boolean, default: false},
         releasedAt: {type:Date, required:true},
+        bookCover:{type:String}  
     
 },{timestamps:true})
 
